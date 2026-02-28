@@ -7,6 +7,7 @@ import (
 	"io"
 	"log"
 	"os"
+	"strconv"
 	"path/filepath"
 	"sync"
 	"time"
@@ -25,11 +26,19 @@ const (
 	loggerDebug = "DEBUG"
 )
 
-const maxLogCount = 1000000
+var maxLogCount, err = strconv.Atoi(GetEnvWithDefault("MAX_LOG_COUNT", "1000000"))
 
 var logCount int
 var setupLogLock sync.Mutex
 var setupLogWorking bool
+
+func GetEnvWithDefault(key string, defVal string) string {
+	val, ex := os.LookupEnv(key)
+	if !ex {
+		return defVal
+	}
+	return val
+}
 
 func SetupLogger() {
 	defer func() {
