@@ -69,6 +69,7 @@ var EmailLoginAuthServerList = []string{
 }
 
 var DebugEnabled bool
+var DumpRequestEnabled bool
 var MemoryCacheEnabled bool
 
 var LogConsumeEnabled = true
