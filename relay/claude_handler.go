@@ -140,7 +140,7 @@ func ClaudeHelper(c *gin.Context, info *relaycommon.RelayInfo) (newAPIError *typ
 		b, err := ioutil.ReadAll(requestBody)
 		requestBody = bytes.NewBuffer(b)
 		if err == nil {
-			logger.LogInfo(c, fmt.Sprintf("DumpRequest: token_name: %s request: %s", c.GetString("token_name"), string(b)))
+			logger.LogInfo(c, fmt.Sprintf("DumpRequest: token_name: %s channel_id: %d request: %s", c.GetString("token_name"), common.GetContextKeyInt(c, constant.ContextKeyChannelId), string(b)))
 		}
 	}
 
