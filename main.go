@@ -36,6 +36,7 @@ var buildFS embed.FS
 //go:embed web/dist/index.html
 var indexPage []byte
 
+
 func main() {
 	startTime := time.Now()
 
@@ -131,6 +132,7 @@ func main() {
 
 	// Initialize HTTP server
 	server := gin.New()
+	common.Engine = server
 	server.Use(gin.CustomRecovery(func(c *gin.Context, err any) {
 		common.SysLog(fmt.Sprintf("panic detected: %v", err))
 		c.JSON(http.StatusInternalServerError, gin.H{
@@ -143,7 +145,7 @@ func main() {
 	// This will cause SSE not to work!!!
 	//server.Use(gzip.Gzip(gzip.DefaultCompression))
 	server.Use(middleware.RequestId())
-	middleware.SetUpLogger(server)
+	common.SetUpMiddleWareLogger(server)
 	// Initialize session store
 	store := cookie.NewStore([]byte(common.SessionSecret))
 	store.Options(sessions.Options{
