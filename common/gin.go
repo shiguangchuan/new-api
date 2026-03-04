@@ -21,8 +21,6 @@ const KeyRequestBody = "key_request_body"
 
 var ErrRequestBodyTooLarge = errors.New("request body too large")
 
-var Engine *gin.Engine = nil
-
 func IsRequestBodyTooLargeError(err error) bool {
 	if err == nil {
 		return false

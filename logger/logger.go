@@ -60,9 +60,6 @@ func SetupLogger() {
 		}
 		gin.DefaultWriter = io.MultiWriter(os.Stdout, fd)
 		gin.DefaultErrorWriter = io.MultiWriter(os.Stderr, fd)
-		if common.Engine != nil {
-			common.SetUpMiddleWareLogger(common.Engine)
-		}
 	}
 }
 
