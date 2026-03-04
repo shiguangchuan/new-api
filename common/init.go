@@ -80,6 +80,8 @@ func InitEnv() {
 	// Initialize variables from constants.go that were using environment variables
 	DebugEnabled = os.Getenv("DEBUG") == "true"
 	DumpRequestEnabled = os.Getenv("DUMP_REQUEST") == "true"
+	DisableGINLog = os.Getenv("DISABLE_GIN_LOG") == "true"
+	DisableSYSLog = os.Getenv("DISABLE_SYS_LOG") == "true"
 	MemoryCacheEnabled = os.Getenv("MEMORY_CACHE_ENABLED") == "true"
 	IsMasterNode = os.Getenv("NODE_TYPE") != "slave"
 
