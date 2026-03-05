@@ -207,6 +207,12 @@ func StreamScannerHandler(c *gin.Context, resp *http.Response, info *relaycommon
 			if common.DebugEnabled {
 				println(data)
 			}
+			if common.DumpRequestEnabled {
+				dumpResponseData := make(map[string]string)
+				dumpResponseData["responseStream"] = data
+				dumpData, _ := common.Marshal(dumpResponseData)
+				logger.LogInfo(c, fmt.Sprintf("DumpResponse: %s", string(dumpData)))
+			}
 
 			if len(data) < 6 {
 				continue

@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"strings"
 	"time"
@@ -155,13 +154,6 @@ func TextHelper(c *gin.Context, info *relaycommon.RelayInfo) (newAPIError *types
 		logger.LogDebug(c, fmt.Sprintf("text request body: %s", string(jsonData)))
 
 		requestBody = bytes.NewBuffer(jsonData)
-	}
-	if common.DumpRequestEnabled {
-		b, err := ioutil.ReadAll(requestBody)
-		requestBody = bytes.NewBuffer(b)
-		if err == nil {
-			logger.LogInfo(c, fmt.Sprintf("DumpRequest: token_name: %s channel_id: %d request: %s", c.GetString("token_name"), common.GetContextKeyInt(c, constant.ContextKeyChannelId), string(b)))
-		}
 	}
 
 	var httpResp *http.Response

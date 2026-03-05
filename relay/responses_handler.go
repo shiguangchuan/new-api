@@ -4,14 +4,11 @@ import (
 	"bytes"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"strings"
 
 	"github.com/QuantumNous/new-api/common"
-	"github.com/QuantumNous/new-api/constant"
 	"github.com/QuantumNous/new-api/dto"
-	"github.com/QuantumNous/new-api/logger"
 	relaycommon "github.com/QuantumNous/new-api/relay/common"
 	"github.com/QuantumNous/new-api/relay/helper"
 	"github.com/QuantumNous/new-api/service"
@@ -79,13 +76,6 @@ func ResponsesHelper(c *gin.Context, info *relaycommon.RelayInfo) (newAPIError *
 			println("requestBody: ", string(jsonData))
 		}
 		requestBody = bytes.NewBuffer(jsonData)
-	}
-	if common.DumpRequestEnabled {
-		b, err := ioutil.ReadAll(requestBody)
-		requestBody = bytes.NewBuffer(b)
-		if err == nil {
-			logger.LogInfo(c, fmt.Sprintf("DumpRequest: token_name: %s channel_id: %d request: %s", c.GetString("token_name"), common.GetContextKeyInt(c, constant.ContextKeyChannelId), string(b)))
-		}
 	}
 
 	var httpResp *http.Response

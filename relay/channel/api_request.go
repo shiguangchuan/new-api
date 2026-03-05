@@ -4,13 +4,17 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"bytes"
 	"io"
+	"io/ioutil"
 	"net/http"
 	"strings"
+	"strconv"
 	"sync"
 	"time"
 
 	common2 "github.com/QuantumNous/new-api/common"
+	constant2 "github.com/QuantumNous/new-api/constant"
 	"github.com/QuantumNous/new-api/logger"
 	"github.com/QuantumNous/new-api/relay/common"
 	"github.com/QuantumNous/new-api/relay/constant"
@@ -284,6 +288,20 @@ func doRequest(c *gin.Context, req *http.Request, info *common.RelayInfo) (*http
 		}
 	}
 
+	if common2.DumpRequestEnabled {
+		b, err := ioutil.ReadAll(req.Body)
+		if err == nil {
+			req.Body.Close()
+			req.Body = io.NopCloser(bytes.NewBuffer(b))
+			dumpRequestData := make(map[string]string)
+			dumpRequestData["token_name"] = c.GetString("token_name")
+			dumpRequestData["channel_id"] = strconv.Itoa(common2.GetContextKeyInt(c, constant2.ContextKeyChannelId))
+			dumpRequestData["requestBody"] = string(b)
+			dumpData, _ := common2.Marshal(dumpRequestData)
+			logger.LogInfo(c, fmt.Sprintf("DumpRequest: %s", string(dumpData)))
+		}
+	}
+
 	resp, err := client.Do(req)
 	if err != nil {
 		logger.LogError(c, "do request failed: "+err.Error())
@@ -291,6 +309,18 @@ func doRequest(c *gin.Context, req *http.Request, info *common.RelayInfo) (*http
 	}
 	if resp == nil {
 		return nil, errors.New("resp is nil")
+	}
+
+	if common2.DumpRequestEnabled && !info.IsStream {
+		b, err := ioutil.ReadAll(resp.Body)
+		if err == nil {
+			resp.Body.Close()
+			resp.Body = io.NopCloser(bytes.NewBuffer(b))
+			dumpResponseData := make(map[string]string)
+			dumpResponseData["responseBody"] = string(b)
+			dumpData, _ := common2.Marshal(dumpResponseData)
+			logger.LogInfo(c, fmt.Sprintf("DumpResponse: %s", string(dumpData)))
+		}
 	}
 
 	_ = req.Body.Close()
