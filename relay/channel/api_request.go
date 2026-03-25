@@ -296,6 +296,8 @@ func doRequest(c *gin.Context, req *http.Request, info *common.RelayInfo) (*http
 			dumpRequestData := make(map[string]string)
 			dumpRequestData["token_name"] = c.GetString("token_name")
 			dumpRequestData["channel_id"] = strconv.Itoa(common2.GetContextKeyInt(c, constant2.ContextKeyChannelId))
+			dumpRequestData["path"] = req.URL.Path
+			dumpRequestData["method"] = req.Method
 			dumpRequestData["requestBody"] = string(b)
 			dumpData, _ := common2.Marshal(dumpRequestData)
 			logger.LogInfo(c, fmt.Sprintf("DumpRequest: %s", string(dumpData)))
